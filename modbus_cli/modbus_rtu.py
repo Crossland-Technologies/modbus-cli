@@ -1,10 +1,12 @@
 import logging
 
 from .access import dump
+from periphery import GPIO
+import time
 
 
 class ModbusRtu:
-    def __init__(self, device, baud, parity, stop_bits, slave_id, timeout):
+    def __init__(self, device, baud, parity, stop_bits, slave_id, timeout, gpioControl):
         from serial import PARITY_EVEN, PARITY_ODD, PARITY_NONE
         parity_opts = {'e': PARITY_EVEN, 'o': PARITY_ODD, 'n': PARITY_NONE}
         self.device = device
@@ -18,6 +20,13 @@ class ModbusRtu:
 
         import umodbus.client.serial.rtu as modbus
         self.protocol = modbus
+        
+        if(gpioControl != None):
+            logging.debug("enabling gpio control")
+            self.gpioControl = True
+            self.gpio = GPIO(gpioControl, "out")
+        else:
+            self.gpioControl = False
 
     def connect(self):
         from serial import Serial
@@ -34,11 +43,23 @@ class ModbusRtu:
                                  stopbits=self.stop_bits, bytesize=8, timeout=self.timeout)
 
     def send(self, request):
+
+        time.sleep(0.005)
+        if(self.gpioControl):
+            self.gpio.write(True)
+
         self.connection.write(request)
+
+        time.sleep(0.02)
+        if(self.gpioControl):
+            self.gpio.write(False)
 
     def receive(self, request):
         response = self.connection.read(2)
+        logging.debug("got: %s", response)
+        
         if len(response) != 2:
+            self.close()
             raise RuntimeError('timeout')
         slave_id, function = response
 
@@ -62,7 +83,10 @@ class ModbusRtu:
         return self.protocol.parse_response_adu(response, request)
 
     def close(self):
+        logging.debug('closing connection')
         self.connection.close()
+        if(self.gpioControl):
+            self.gpio.close()
 
     def perform_accesses(self, accesses, definitions):
         for access in accesses:

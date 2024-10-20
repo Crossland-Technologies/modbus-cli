@@ -231,3 +231,42 @@ SEE ALSO
 * `modbus <https://en.wikipedia.org/wiki/Modbus>`__
 * `umodbus <https://pypi.python.org/pypi/uModbus>`__
 * `pack format <https://docs.python.org/3/library/struct.html#format-characters>`__
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################
+#           Additions
+##############################################
+
+`modbus-cli/dist-packages/umodbus/client/serial/rtu.py`
+```python
+def parse_response_adu(resp_adu, req_adu=None):
+  ...
+  #validate_crc(resp_adu)
+```
+
+
+
+Example command
+```bash
+./bin/modbus -s 1 --baud=4800 --stop-bits=1 --parity=e --byte-order=be --gpio=158 --timeout=5 --verbose /dev/ttyS2 
+i@6/f;
+```
+
+```bash
+./bin/modbus -s 1 --baud=4800 --stop-bits=1 --parity=e --byte-order=be --gpio=158 --timeout=5 --silent /dev/ttyS2 i@6/f;
+```

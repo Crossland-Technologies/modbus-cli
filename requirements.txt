@@ -1,2 +1,3 @@
 umodbus
 colorama
+python-periphery
