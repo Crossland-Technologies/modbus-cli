@@ -250,7 +250,9 @@ SEE ALSO
 
 ##############################################
 #           Additions
-##############################################
+#############################################
+
+https://wiki.radxa.com/Rockpi4/dev/use-uart2-as-application-uart
 
 `modbus-cli/dist-packages/umodbus/client/serial/rtu.py`
 ```python
