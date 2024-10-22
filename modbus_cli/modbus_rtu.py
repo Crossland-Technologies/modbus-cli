@@ -44,13 +44,16 @@ class ModbusRtu:
 
     def send(self, request):
 
-        time.sleep(0.005)
+        # 0.005
+        time.sleep(0.1) 
         if(self.gpioControl):
             self.gpio.write(True)
 
         self.connection.write(request)
 
-        time.sleep(0.02)
+        # 0.02
+        # 0.0175
+        time.sleep(0.02) 
         if(self.gpioControl):
             self.gpio.write(False)
 
