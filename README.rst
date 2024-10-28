@@ -279,3 +279,17 @@ Example command
 ```bash
 ./bin/modbus -s 1 --baud=4800 --stop-bits=1 --parity=e --byte-order=be --gpio=158 --timeout=5 --silent /dev/ttyS0 i@6/f;
 ```
+
+
+## RPi 4 required
+
+`nano /boot/firmware/config.txt`
+```
+#our stuff
+enable_uart=1
+dtoverlay=disable-bt
+```
+
+then a reboot
+`./bin/modbus -s 1 --baud=4800 --stop-bits=1 --parity=e --byte-order=be --gpio=26 --timeout=5 --verbose /dev/serial0 i@6/f`
+
