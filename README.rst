@@ -271,3 +271,11 @@ Example command
 ```bash
 ./bin/modbus -s 1 --baud=4800 --stop-bits=1 --parity=e --byte-order=be --gpio=158 --timeout=5 --silent /dev/ttyS2 i@6/f;
 ```
+
+
+
+
+
+```bash
+./bin/modbus -s 1 --baud=4800 --stop-bits=1 --parity=e --byte-order=be --gpio=158 --timeout=5 --silent /dev/ttyS0 i@6/f;
+```

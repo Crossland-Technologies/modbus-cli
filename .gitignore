@@ -1,0 +1,9 @@
+lib
+*/__pycache__/*
+
+bin
+!bin/modbus
+!bin/foo
+
+lib64
+pyvenv.cfg

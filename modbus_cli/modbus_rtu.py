@@ -1,7 +1,8 @@
 import logging
 
 from .access import dump
-from periphery import GPIO
+#from periphery import GPIO
+from RPi import GPIO
 import time
 
 
@@ -19,12 +20,15 @@ class ModbusRtu:
         self.slave_id = slave_id
 
         import umodbus.client.serial.rtu as modbus
+        GPIO.setmode(GPIO.BCM)
         self.protocol = modbus
         
         if(gpioControl != None):
             logging.debug("enabling gpio control")
             self.gpioControl = True
-            self.gpio = GPIO(gpioControl, "out")
+            self.gpio = gpioControl
+            GPIO.setwarnings(False)
+            GPIO.setup(self.gpio, GPIO.OUT)
         else:
             self.gpioControl = False
 
@@ -39,15 +43,21 @@ class ModbusRtu:
                       self.timeout,
                       )
 
-        self.connection = Serial(port=self.device, baudrate=self.baud, parity=self.parity,
-                                 stopbits=self.stop_bits, bytesize=8, timeout=self.timeout)
+        self.connection = Serial(
+            port=self.device,
+            baudrate=self.baud,
+            parity=self.parity,
+            stopbits=self.stop_bits,
+            bytesize=8,
+            timeout=self.timeout
+        )
 
     def send(self, request):
 
         # 0.005
         time.sleep(0.1) 
         if(self.gpioControl):
-            self.gpio.write(True)
+            GPIO.output(self.gpio, True)
 
         self.connection.write(request)
 
@@ -55,7 +65,7 @@ class ModbusRtu:
         # 0.0175
         time.sleep(0.02) 
         if(self.gpioControl):
-            self.gpio.write(False)
+            GPIO.output(self.gpio, False)
 
     def receive(self, request):
         response = self.connection.read(2)
@@ -89,7 +99,7 @@ class ModbusRtu:
         logging.debug('closing connection')
         self.connection.close()
         if(self.gpioControl):
-            self.gpio.close()
+            GPIO.cleanup(self.gpio)
 
     def perform_accesses(self, accesses, definitions):
         for access in accesses:

@@ -10,7 +10,8 @@ import pathlib
 import colorama as clr
 
 
-sys.path.append("/home/rock/htdocs/modbus-cli")
+sys.path.append("/home/pi/htdocs/modbus-cli")
+sys.path.append("/home/pi/htdocs/modbus-cli/lib/python3.11/site-packages")
 
 from modbus_cli.definitions import Definitions
 from modbus_cli.modbus_rtu import ModbusRtu
